@@ -15,4 +15,8 @@ class MULTIPLAYERSESSIONS_API UMenu : public UUserWidget
 {
 	GENERATED_BODY()
 
+public:
+	// Blueprint callable function to setup menu
+	UFUNCTION(BlueprintCallable)
+	void MenuSetup();
 };
