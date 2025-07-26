@@ -2,6 +2,60 @@
 
 
 #include "Menu.h"
+#include "Components/Button.h"
+
+
+void UMenu::HostButtonClicked()
+{
+    // Verify that the function callback is working
+    if (GEngine)
+    {
+        // Show debug message
+        GEngine->AddOnScreenDebugMessage(
+            -1,
+            15.f,
+            FColor::Yellow,
+            FString(TEXT("Host Button Clicked"))
+        );
+    }
+}
+
+
+void UMenu::JoinButtonClicked()
+{
+    // Verify that the function callback is working
+    if (GEngine)
+    {
+        // Show debug message
+        GEngine->AddOnScreenDebugMessage(
+            -1,
+            15.f,
+            FColor::Yellow,
+            FString(TEXT("Join Button Clicked"))
+        );
+    }
+}
+
+
+// Exit from this function with false if the super version returns false, otherwise bind callbacks and return true
+bool UMenu::Initialize()
+{
+    // Call the super version
+    if (!Super::Initialize())
+    {
+        return false;
+    }
+    // Bind callbacks to buttons
+    if (HostButton)
+    {
+        HostButton->OnClicked.AddDynamic(this, &UMenu::HostButtonClicked);
+    }
+    if (JoinButton)
+    {
+        JoinButton->OnClicked.AddDynamic(this, &UMenu::JoinButtonClicked);
+    }
+    return true;
+}
 
 
 void UMenu::MenuSetup()
