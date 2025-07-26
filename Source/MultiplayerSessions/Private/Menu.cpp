@@ -64,8 +64,8 @@ void UMenu::MenuSetup()
     AddToViewport();
     // Set the widget's visibility to visible
     SetVisibility(ESlateVisibility::Visible);
-    // Be able to focus on the widget
-    bIsFocusable = true;
+    // Set the widget to be focusable
+    SetIsFocusable(true); // Direct access to bIsFocusable is deprecated, using SetIsFocusable function instead
 
     /* Set the input mode via player controller */
     // Get World
