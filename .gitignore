@@ -1,0 +1,11 @@
+# Config
+**/.vscode
+
+# Generated contents
+**/Binaries
+**/Intermediate
+
+# Others
+**/Content/__ExternalActors__
+**/Content/__ExternalObjects__
+**/**.psd
