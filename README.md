@@ -28,9 +28,7 @@ A multiplayer plugin with menu system for Unreal Engine 5
     [OnlineSubsystemSteam]
     bEnabled=true
     SteamDevAppId=480 ; This is the dev app ID for Steam's example project called Space War
-
-    ; If using Sessions
-    ; bInitServerOnClient=true
+    bInitServerOnClient=true ; Set to true if using Sessions
 
     [/Script/OnlineSubsystemSteam.SteamNetDriver]
     NetConnectionClassName="OnlineSubsystemSteam.SteamNetConnection"
