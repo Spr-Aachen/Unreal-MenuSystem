@@ -42,16 +42,17 @@ A multiplayer plugin with menu system for Unreal Engine 5
 
 ### 2. Fetch Plugin
 
-1. Navigate to your target project's Plugins folder (or make one if it doesn't exist)
+1. Navigate to your target project's directory
 
 2. Clone the repository or add as a submodule
-    ```shell
-    git clone https://github.com/Spr-Aachen/Unreal-MultiplayerMenuSystem-Plugin.git MultiplayerSessions
-    ```
-    or
-    ```shell
-    git submodule add https://github.com/Spr-Aachen/Unreal-MultiplayerMenuSystem-Plugin.git MultiplayerSessions
-    ```
+    - Clone
+        ```shell
+        git clone https://github.com/Spr-Aachen/Unreal-MultiplayerMenuSystem-Plugin.git ./Plugins/MultiplayerSessions
+        ```
+    - Add as a submodule
+        ```shell
+        git submodule add https://github.com/Spr-Aachen/Unreal-MultiplayerMenuSystem-Plugin.git ./Plugins/MultiplayerSessions
+        ```
 
 ### 3. Build Project
 
