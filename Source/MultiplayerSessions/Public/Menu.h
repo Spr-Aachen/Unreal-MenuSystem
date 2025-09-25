@@ -12,8 +12,7 @@
 
 
 UCLASS()
-class MULTIPLAYERSESSIONS_API UMenu : public UUserWidget
-{
+class MULTIPLAYERSESSIONS_API UMenu : public UUserWidget{
 	GENERATED_BODY()
 
 private:
@@ -48,7 +47,9 @@ protected:
 	virtual bool Initialize() override;
 
 protected:
-	/* Callbacks for the custom delegates on the MultiplayerSessionsSubsystem */
+	/*
+	Callbacks for the custom delegates on the MultiplayerSessionsSubsystem
+	*/
 	// Callback function which will be called when delegate is broadcast
 	UFUNCTION() // Because we're binding this to a dynamic multicast delegate
 	void OnCreateSession(bool bWasSuccessful);

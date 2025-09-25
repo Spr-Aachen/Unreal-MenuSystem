@@ -1,14 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
-#include "MultiplayerSessionsSubsystem.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
 #include "Online/OnlineSessionNames.h"
 
+#include "MultiplayerSessionsSubsystem.h"
+
 
 UMultiplayerSessionsSubsystem::UMultiplayerSessionsSubsystem() :
-    /* Construct delegates that took in the address of callback function */
+    /*
+    Construct delegates that took in the address of callback function
+    */
     CreateSessionCompleteDelegate(
         FOnCreateSessionCompleteDelegate::CreateUObject(this, &UMultiplayerSessionsSubsystem::OnCreateSessionComplete)
     ),
@@ -23,26 +25,26 @@ UMultiplayerSessionsSubsystem::UMultiplayerSessionsSubsystem() :
     ),
     StartSessionCompleteDelegate(
         FOnStartSessionCompleteDelegate::CreateUObject(this, &UMultiplayerSessionsSubsystem::OnStartSessionComplete)
-    )
-{
-    /* Get session interface */
+    ){
+    /*
+    Get session interface
+    */
     IOnlineSubsystem *OnlineSubsystem = IOnlineSubsystem::Get();
-    if (OnlineSubsystem)
-    {
+    if (OnlineSubsystem){
         SessionInterface = OnlineSubsystem->GetSessionInterface();
     }
 }
 
 
-void UMultiplayerSessionsSubsystem::CreateSession(int32 NumPublicConnections, FString MatchType)
-{
-    /* If SessionInterface is not valid */
-    if (!SessionInterface.IsValid()) // The way to check if TSharedPtr is valid is by using the 'IsValid' function
-    {
+void UMultiplayerSessionsSubsystem::CreateSession(int32 NumPublicConnections, FString MatchType){
+    // Check if SessionInterface is not valid
+    if (!SessionInterface.IsValid()){ // The way to check if TSharedPtr is valid is by using the 'IsValid' function
         return;
     }
 
-    /* Check and destroy the existing session */
+    /*
+    Check and destroy the existing session
+    */
     // Get the existing session pointer
     auto ExistingSession = SessionInterface->GetNamedSession(
         NAME_GameSession // If we always use this NAME_GameSession, then we'll always be checking to see if a session with this name exists
@@ -60,12 +62,14 @@ void UMultiplayerSessionsSubsystem::CreateSession(int32 NumPublicConnections, FS
         DestroySession();
     }
 
-	/* Create a new session */
+	/*
+    Create a new session
+    */
     // Add CreateSessionCompleteDelegate to SessionInterface's delegate list and store it in a FDelegateHandle
     CreateSessionCompleteDelegateHandle = SessionInterface->AddOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegate); // Once a session is created, then the fallback function which bound to this delegate will be called
     // Initialize LastSessionSettings TSharedPtr to class FOnlineSessionSettings
     LastSessionSettings = MakeShareable(new FOnlineSessionSettings());
-    /* Configure session settings */
+    // Configure session settings
     LastSessionSettings->bIsLANMatch = IOnlineSubsystem::Get()->GetSubsystemName() == "Null" ? true : false; // Using ternary operator by checking SubsystemName to decide whether to connect over the internet
     LastSessionSettings->NumPublicConnections = NumPublicConnections; // Determine how many players can connect to the game
 	LastSessionSettings->bAllowJoinInProgress = true; // Allow players to join when session is running
@@ -79,7 +83,6 @@ void UMultiplayerSessionsSubsystem::CreateSession(int32 NumPublicConnections, FS
         EOnlineDataAdvertisementType::ViaOnlineServiceAndPing // Session will be advertised via the online service and ping
     );
     LastSessionSettings->BuildUniqueId = 1; // Allow multiple users to launch their own build and host
-    /* Create a session */
     // Get the world's first local player
     const ULocalPlayer *LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
     bool IsCreationSuccessful = SessionInterface->CreateSession(
@@ -88,8 +91,7 @@ void UMultiplayerSessionsSubsystem::CreateSession(int32 NumPublicConnections, FS
         *LastSessionSettings
     );
     // If session creation is failed
-    if (!IsCreationSuccessful)
-    {
+    if (!IsCreationSuccessful){
         // Remove CreateSessionCompleteDelegate from the list
         SessionInterface->ClearOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegateHandle);
         // Broadcast custom multicast delegate
@@ -100,10 +102,8 @@ void UMultiplayerSessionsSubsystem::CreateSession(int32 NumPublicConnections, FS
 }
 
 
-void UMultiplayerSessionsSubsystem::OnCreateSessionComplete(FName SessionName, bool bWasSuccessful)
-{
-    if (SessionInterface)
-    {
+void UMultiplayerSessionsSubsystem::OnCreateSessionComplete(FName SessionName, bool bWasSuccessful){
+    if (SessionInterface){
         // Remove CreateSessionCompleteDelegate from the list
         SessionInterface->ClearOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegateHandle);
     }
@@ -114,15 +114,16 @@ void UMultiplayerSessionsSubsystem::OnCreateSessionComplete(FName SessionName, b
 }
 
 
-void UMultiplayerSessionsSubsystem::FindSessions(int32 MaxSearchResults)
-{
-    /* If SessionInterface is not valid */
+void UMultiplayerSessionsSubsystem::FindSessions(int32 MaxSearchResults){
+    // Check if SessionInterface is not valid
     if (!SessionInterface.IsValid()) // The way to check if TSharedPtr is valid is by using the 'IsValid' function
 	{
 		return;
 	}
 
-    /* Find game sessions */
+    /*
+    Find game sessions
+    */
     // Add FindSessionsCompleteDelegate to SessionInterface's delegate list and store it in a FDelegateHandle
     FindSessionsCompleteDelegateHandle = SessionInterface->AddOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegate); // Once all sessions are found, then the fallback function which bound to this delegate will be called
     // Initialize LastSessionSearch TSharedPtr to class FOnlineSessionSearch
@@ -135,7 +136,6 @@ void UMultiplayerSessionsSubsystem::FindSessions(int32 MaxSearchResults)
 		true,
 		EOnlineComparisonOp::Equals
 	);
-    /* Find sessions */
     // Get the world's first local player
     const ULocalPlayer *LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 	bool IsSearchSuccessful = SessionInterface->FindSessions(
@@ -143,8 +143,7 @@ void UMultiplayerSessionsSubsystem::FindSessions(int32 MaxSearchResults)
 		LastSessionSearch.ToSharedRef()
 	);
     // If sessions search is failed
-    if (!IsSearchSuccessful)
-    {
+    if (!IsSearchSuccessful){
         // Remove FindSessionsCompleteDelegate from the list
         SessionInterface->ClearOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegateHandle);
         // Broadcast custom multicast delegate
@@ -156,23 +155,19 @@ void UMultiplayerSessionsSubsystem::FindSessions(int32 MaxSearchResults)
 }
 
 
-void UMultiplayerSessionsSubsystem::OnFindSessionsComplete(bool bWasSuccessful)
-{
-    if (SessionInterface)
-    {
+void UMultiplayerSessionsSubsystem::OnFindSessionsComplete(bool bWasSuccessful){
+    if (SessionInterface){
         // Remove FindSessionsCompleteDelegate from the list
         SessionInterface->ClearOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegateHandle);
     }
     // Broadcast custom multicast delegate
-    if (LastSessionSearch->SearchResults.Num() <= 0)
-    {
+    if (LastSessionSearch->SearchResults.Num() <= 0){
         MultiplayerOnFindSessionsComplete.Broadcast(
             TArray<FOnlineSessionSearchResult>(), // Empty array
             false
         );
     }
-    else
-    {
+    else{
         MultiplayerOnFindSessionsComplete.Broadcast(
             LastSessionSearch->SearchResults,
             bWasSuccessful
@@ -181,11 +176,9 @@ void UMultiplayerSessionsSubsystem::OnFindSessionsComplete(bool bWasSuccessful)
 }
 
 
-void UMultiplayerSessionsSubsystem::JoinSession(const FOnlineSessionSearchResult &SessionResult)
-{
-	/* If SessionInterface is not valid */
-	if (!SessionInterface.IsValid()) // The way to check if TSharedPtr is valid is by using the 'IsValid' function
-    {
+void UMultiplayerSessionsSubsystem::JoinSession(const FOnlineSessionSearchResult &SessionResult){
+    // Check if SessionInterface is not valid
+    if (!SessionInterface.IsValid()){ // The way to check if TSharedPtr is valid is by using the 'IsValid' function
         // Broadcast custom multicast delegate
         MultiplayerOnJoinSessionsComplete.Broadcast(
             EOnJoinSessionCompleteResult::UnknownError
@@ -193,10 +186,11 @@ void UMultiplayerSessionsSubsystem::JoinSession(const FOnlineSessionSearchResult
         return;
     }
 
-    /* Join the game session */
+    /*
+    Join the game session
+    */
 	// Add JoinSessionCompleteDelegate to SessionInterface's delegate list
     JoinSessionCompleteDelegateHandle = SessionInterface->AddOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegate); // Once the session is joined, then the fallback function which bound to this delegate will be called
-    /* Join session */
     // Get the world's first local player
     const ULocalPlayer *LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
 	bool IsJointSuccessful = SessionInterface->JoinSession(
@@ -205,8 +199,7 @@ void UMultiplayerSessionsSubsystem::JoinSession(const FOnlineSessionSearchResult
 		SessionResult
 	);
     // If sessions joint is failed
-    if (!IsJointSuccessful)
-    {
+    if (!IsJointSuccessful){
         // Remove JoinSessionCompleteDelegate from the list
         SessionInterface->ClearOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegateHandle);
         // Broadcast custom multicast delegate
@@ -217,10 +210,8 @@ void UMultiplayerSessionsSubsystem::JoinSession(const FOnlineSessionSearchResult
 }
 
 
-void UMultiplayerSessionsSubsystem::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
-{
-    if (SessionInterface)
-    {
+void UMultiplayerSessionsSubsystem::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result){
+    if (SessionInterface){
         // Remove JoinSessionCompleteDelegate from the list
         SessionInterface->ClearOnJoinSessionCompleteDelegate_Handle(JoinSessionCompleteDelegateHandle);
     }
@@ -231,11 +222,9 @@ void UMultiplayerSessionsSubsystem::OnJoinSessionComplete(FName SessionName, EOn
 }
 
 
-void UMultiplayerSessionsSubsystem::DestroySession()
-{
-	/* If SessionInterface is not valid */
-	if (!SessionInterface.IsValid()) // The way to check if TSharedPtr is valid is by using the 'IsValid' function
-    {
+void UMultiplayerSessionsSubsystem::DestroySession(){
+    // Check if SessionInterface is not valid
+    if (!SessionInterface.IsValid()){ // The way to check if TSharedPtr is valid is by using the 'IsValid' function
         // Broadcast custom multicast delegate
         MultiplayerOnDestroySessionComplete.Broadcast(
             false
@@ -243,18 +232,18 @@ void UMultiplayerSessionsSubsystem::DestroySession()
         return;
     }
 
-    /* Destroy the game session */
+    /*
+    Destroy the game session
+    */
     // Add DestroySessionCompleteDelegate to SessionInterface's delegate list
     DestroySessionCompleteDelegateHandle = SessionInterface->AddOnDestroySessionCompleteDelegate_Handle(DestroySessionCompleteDelegate); // Once the session is joined, then the fallback function which bound to this delegate will be called
-    /* Destroy session */
     // Get the world's first local player
     const ULocalPlayer *LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController();
     bool IsDestructionSuccessful = SessionInterface->DestroySession(
         NAME_GameSession
     );
     // If sessions destruction is failed
-    if (!IsDestructionSuccessful)
-    {
+    if (!IsDestructionSuccessful){
         // Remove DestroySessionCompleteDelegate from the list
         SessionInterface->ClearOnDestroySessionCompleteDelegate_Handle(DestroySessionCompleteDelegateHandle);
         // Broadcast custom multicast delegate
@@ -265,16 +254,13 @@ void UMultiplayerSessionsSubsystem::DestroySession()
 }
 
 
-void UMultiplayerSessionsSubsystem::OnDestroySessionComplete(FName SessionName, bool bWasSuccessful)
-{
-    if (SessionInterface)
-    {
+void UMultiplayerSessionsSubsystem::OnDestroySessionComplete(FName SessionName, bool bWasSuccessful){
+    if (SessionInterface){
         // Remove DestroySessionCompleteDelegate from the list
         SessionInterface->ClearOnDestroySessionCompleteDelegate_Handle(DestroySessionCompleteDelegateHandle);
     }
     // If new session creation is needed
-    if (bWasSuccessful && bCreateSessionOnDestroy)
-    {
+    if (bWasSuccessful && bCreateSessionOnDestroy){
         bCreateSessionOnDestroy = false;
         CreateSession(LastNumPublicConnections, LastMatchType);
     }
@@ -285,11 +271,9 @@ void UMultiplayerSessionsSubsystem::OnDestroySessionComplete(FName SessionName, 
 }
 
 
-void UMultiplayerSessionsSubsystem::StartSession()
-{
+void UMultiplayerSessionsSubsystem::StartSession(){
 
 }
 
-void UMultiplayerSessionsSubsystem::OnStartSessionComplete(FName SessionName, bool bWasSuccessful)
-{
+void UMultiplayerSessionsSubsystem::OnStartSessionComplete(FName SessionName, bool bWasSuccessful){
 }

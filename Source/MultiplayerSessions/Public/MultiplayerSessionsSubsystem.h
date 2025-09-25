@@ -46,8 +46,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( // No worry if having red squiggles
 
 
 UCLASS()
-class MULTIPLAYERSESSIONS_API UMultiplayerSessionsSubsystem : public UGameInstanceSubsystem
-{
+class MULTIPLAYERSESSIONS_API UMultiplayerSessionsSubsystem : public UGameInstanceSubsystem{
 	GENERATED_BODY()
 
 public:
@@ -62,7 +61,9 @@ private:
 	// TSharedPtr to store the session search that we last used
 	TSharedPtr<FOnlineSessionSearch> LastSessionSearch;
 
-	/* Session delegates to bind callback functions */
+	/*
+	Session delegates to bind callback functions
+	*/
 	// Delegate to bind callback function of session creation
 	FOnCreateSessionCompleteDelegate CreateSessionCompleteDelegate;
 	// DelegateHandle for CreateSessionCompleteDelegate
@@ -85,7 +86,9 @@ private:
 	FDelegateHandle StartSessionCompleteDelegateHandle;
 
 public:
-	/* Custom multicast delegates to bind callback functions */
+	/*
+	Custom multicast delegates to bind callback functions
+	*/
 	// Dynamic multicast delegate to bind callback ufunctions of session creation result
 	FMultiplayerOnCreateSessionComplete MultiplayerOnCreateSessionComplete;
 	// Multicast delegate to bind callback functions of session search result
@@ -98,13 +101,17 @@ public:
 	FMultiplayerOnStartSessionComplete MultiplayerOnStartSessionComplete;
 
 private:
-	/* Store these for the last session we failed to created */
+	/*
+	Store these for the last session we failed to created
+	*/
 	bool bCreateSessionOnDestroy{false};
 	int32 LastNumPublicConnections;
 	FString LastMatchType;
 
 public:
-	/* Session functionality handler functions */
+	/*
+	Session functionality handler functions
+	*/
 	// Function to create game session
 	void CreateSession(
 		int32 NumPublicConnections, // Specify the number of players that can join the game
@@ -124,7 +131,9 @@ public:
 	void StartSession();
 
 protected:
-	/* Callback functions for the session delegates. Notice that each of their input&return params have to match the definition of the corresponding delegate */
+	/*
+	Callback functions for the session delegates. Notice that each of their input&return params have to match the definition of the corresponding delegate
+	*/
 	// Callback function which will be called in response to successfully create a game session
 	void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);
 	// Callback function which will be called in response to successfully find game sessions
