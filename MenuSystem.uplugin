@@ -2,21 +2,21 @@
 	"FileVersion": 3,
 	"Version": 1,
 	"VersionName": "1.0",
-	"FriendlyName": "MultiplayerSessions",
-	"Description": "A plugin for handling online multiplayer sessions",
+	"FriendlyName": "MenuSystem",
+	"Description": "Multiplayer Menu System",
 	"Category": "Other",
 	"CreatedBy": "Spr_Aachen",
-	"CreatedByURL": "",
+	"CreatedByURL": "https://github.com/Spr-Aachen",
 	"DocsURL": "",
 	"MarketplaceURL": "",
 	"SupportURL": "",
 	"CanContainContent": true,
-	"IsBetaVersion": false,
+	"IsBetaVersion": true,
 	"IsExperimentalVersion": false,
 	"Installed": false,
 	"Modules": [
 		{
-			"Name": "MultiplayerSessions",
+			"Name": "MenuSystem",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}

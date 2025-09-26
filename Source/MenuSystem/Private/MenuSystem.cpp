@@ -1,6 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "MultiplayerSessions.h"
+#include "MenuSystem.h"
 
 #define LOCTEXT_NAMESPACE "FMultiplayerSessionsModule"
 

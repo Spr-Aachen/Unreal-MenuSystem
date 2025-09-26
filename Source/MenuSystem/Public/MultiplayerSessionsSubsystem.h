@@ -46,7 +46,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( // No worry if having red squiggles
 
 
 UCLASS()
-class MULTIPLAYERSESSIONS_API UMultiplayerSessionsSubsystem : public UGameInstanceSubsystem{
+class MENUSYSTEM_API UMultiplayerSessionsSubsystem : public UGameInstanceSubsystem{
 	GENERATED_BODY()
 
 public:
