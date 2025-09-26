@@ -1,6 +1,6 @@
 <div align = "center">
 
-# Unreal Multiplayer MenuSystem Plugin
+# Unreal MenuSystem Plugin
 
 A multiplayer plugin with menu system for Unreal Engine 5
 
@@ -47,11 +47,11 @@ A multiplayer plugin with menu system for Unreal Engine 5
 2. Clone the repository or add as a submodule
     - Clone
         ```shell
-        git clone https://github.com/Spr-Aachen/Unreal-MultiplayerMenuSystem-Plugin.git ./Plugins/MultiplayerSessions
+        git clone https://github.com/Spr-Aachen/Unreal-MenuSystem.git ./Plugins/MenuSystem
         ```
     - Add as a submodule
         ```shell
-        git submodule add https://github.com/Spr-Aachen/Unreal-MultiplayerMenuSystem-Plugin.git ./Plugins/MultiplayerSessions
+        git submodule add https://github.com/Spr-Aachen/Unreal-MenuSystem.git ./Plugins/MenuSystem
         ```
 
 ### 3. Build Project
@@ -63,6 +63,6 @@ A multiplayer plugin with menu system for Unreal Engine 5
 
 ## Cases
 
-Here are some projects based on Unreal Multiplayer MenuSystem Plugin:
-- [Unreal-MultiplayerMenuSystem](https://github.com/Spr-Aachen/Unreal-MultiplayerMenuSystem)
+Here are some projects based on Unreal MenuSystem Plugin:
+- [Unreal-MenuSystem-Demo](https://github.com/Spr-Aachen/Unreal-MenuSystem-Demo)
 - [Unreal-BlasterProject](https://github.com/Spr-Aachen/Unreal-BlasterProject)
